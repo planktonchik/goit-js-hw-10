@@ -1,0 +1,66 @@
+@import 'izitoast/dist/css/iziToast.min.css';
+
+body {
+  font-family: 'Montserrat', sans-serif;
+}
+
+.form {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+  color: #2e2f42;
+  width: 360px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+input[type='number'] {
+  margin-top: 8px;
+  outline: transparent;
+  box-sizing: border-box;
+  width: 360px;
+  height: 40px;
+  border: 1px solid #808080;
+  border-radius: 4px;
+  transition: border linear 250ms;
+  padding-left: 16px;
+}
+
+input[type='number']:hover,
+input[type='number']:focus {
+  border-color: #000;
+}
+
+fieldset {
+  border: 1px solid #808080;
+  border-radius: 4px;
+  padding: 8px 16px;
+  display: flex;
+  justify-content: space-around;
+  transition: border-color 250ms linear;
+}
+
+fieldset:hover,
+fieldset:focus-within {
+  border-color: #000;
+}
+
+button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  background-color: #4e75ff;
+  color: #fff;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: background-color 250ms linear;
+}
+
+button:hover {
+  background-color: #6c8cff;
+}

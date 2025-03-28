@@ -1,49 +1,51 @@
 import iziToast from 'izitoast';
-import 'izitoast/dist/css/iziToast.min.css';
 
 const form = document.querySelector('.form');
-const delayInput = document.querySelector("input[name='delay']");
+const delayInput = document.querySelector('input[name="delay"]');
+const stateRadios = document.querySelectorAll('input[name="state"]');
 
-function handleSubmitForm() {
+const createPromise = (delay, shouldResolve) => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      shouldResolve ? resolve(delay) : reject(delay);
+    }, delay);
+  });
+};
+
+form.addEventListener('submit', e => {
+  e.preventDefault();
+
   const delay = Number(delayInput.value);
-  const checkedInput = document.querySelector("input[name='state']:checked");
-  const state = checkedInput.value;
+  const selectedState = [...stateRadios].find(radio => radio.checked)?.value;
 
-  if (!checkedInput) {
-    iziToast.warning({
-      title: 'Warning',
-      message: 'Please select a state',
+  if (!selectedState) {
+    iziToast.error({
+      message: 'Please select a state!',
+      position: 'topCenter',
+      timeout: 3000,
     });
     return;
   }
 
-  const promise = new Promise((resolve, reject) => {
-    setTimeout(() => {
-      if (state === 'fulfilled') {
-        resolve(delay);
-      } else {
-        reject(delay);
-      }
-    }, delay);
-  });
-
-  promise
-    .then(delay => {
+  createPromise(delay, selectedState === 'fulfilled')
+    .then(() => {
       iziToast.success({
-        title: '✅ Success',
-        message: `Fulfilled promise in ${delay}ms`,
+        message: `✅ Fulfilled promise in ${delay}ms`,
+        position: 'topRight',
+        messageColor: '#fff',
+        backgroundColor: '#59a10d',
+        timeout: 5000,
       });
     })
-
-    .catch(delay => {
+    .catch(() => {
       iziToast.error({
-        title: '❌ Error',
-        message: `Rejected promise in ${delay}ms`,
+        message: `❌ Rejected promise in ${delay}ms`,
+        position: 'topRight',
+        messageColor: '#fff',
+        backgroundColor: '#ef4040',
+        timeout: 5000,
       });
     });
-}
 
-form.addEventListener('submit', event => {
-  event.preventDefault();
-  handleSubmitForm();
+  form.reset();
 });

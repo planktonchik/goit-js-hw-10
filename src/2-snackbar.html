@@ -2,39 +2,37 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Snackbar</title>
-    <link rel="stylesheet" href="./css/snackbar.css" />
+    <link rel="stylesheet" href="./css/2-snackbar.css" />
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Imperial+Script&family=Monsieur+La+Doulaise&family=Montserrat:ital,wght@0,100..900;1,100..900"
+      rel="stylesheet"
+    />
   </head>
   <body>
-    <main>
-      <div class="container">
-        <a class="back-link" href="./index.html">Go back</a>
-        <h1 class="main-title">Snackbar</h1>
+    <form class="form">
+      <label>
+        Delay (ms)
+        <input type="number" name="delay" required />
+      </label>
 
-        <form class="form">
-          <label>
-            Delay (ms)
-            <input type="number" name="delay" required />
-          </label>
+      <fieldset>
+        <legend>State</legend>
+        <label>
+          <input type="radio" name="state" value="fulfilled" required />
+          Fulfilled
+        </label>
+        <label>
+          <input type="radio" name="state" value="rejected" required />
+          Rejected
+        </label>
+      </fieldset>
 
-          <fieldset>
-            <legend>State</legend>
-            <label>
-              <input type="radio" name="state" value="fulfilled" required />
-              Fulfilled
-            </label>
-            <label>
-              <input type="radio" name="state" value="rejected" required />
-              Rejected
-            </label>
-          </fieldset>
-
-          <button type="submit">Create notification</button>
-        </form>
-      </div>
-    </main>
+      <button type="submit">Create notification</button>
+    </form>
 
     <script type="module" src="./js/2-snackbar.js"></script>
   </body>

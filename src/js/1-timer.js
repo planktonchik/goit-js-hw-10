@@ -1,19 +1,18 @@
 import flatpickr from 'flatpickr';
-import 'flatpickr/dist/flatpickr.min.css';
-
 import iziToast from 'izitoast';
-import 'izitoast/dist/css/iziToast.min.css';
+const refs = {
+  startButton: document.querySelector('[data-start]'),
+  dateTimePicker: document.querySelector('#datetime-picker'),
+  days: document.querySelector('[data-days]'),
+  hours: document.querySelector('[data-hours]'),
+  minutes: document.querySelector('[data-minutes]'),
+  seconds: document.querySelector('[data-seconds]'),
+};
 
-const startBtn = document.querySelector('button[data-start]');
+let userSelectedDate = null;
+let countdownInterval = null;
 
-const dateTimePicker = document.querySelector('#datetime-picker');
-
-const daysValue = document.querySelector('[data-days]');
-const hoursValue = document.querySelector('[data-hours]');
-const minsValue = document.querySelector('[data-minutes]');
-const secsValue = document.querySelector('[data-seconds]');
-
-startBtn.disabled = true;
+refs.startButton.disabled = true;
 
 const options = {
   enableTime: true,
@@ -22,73 +21,66 @@ const options = {
   minuteIncrement: 1,
   onClose(selectedDates) {
     const selectedDate = selectedDates[0];
-
-    if (selectedDate < new Date()) {
+    if (selectedDate <= new Date()) {
       iziToast.error({
         title: 'Error',
         message: 'Please choose a date in the future',
+        position: 'topRight',
       });
-      startBtn.disabled = true;
+      refs.startButton.disabled = true;
     } else {
       userSelectedDate = selectedDate;
-      startBtn.disabled = false;
+      refs.startButton.disabled = false;
     }
   },
 };
 
-flatpickr(dateTimePicker, options);
+flatpickr(refs.dateTimePicker, options);
 
-let userSelectedDate = null;
-
-startBtn.addEventListener('click', () => {
-  startBtn.disabled = true;
-  startBtn.classList.add('active');
-  dateTimePicker.disabled = true;
-  startTimer();
+refs.startButton.addEventListener('click', () => {
+  refs.startButton.disabled = true;
+  refs.dateTimePicker.disabled = true;
+  startCountdown();
 });
 
-function startTimer() {
-  const interval = setInterval(() => {
-    const currentTime = new Date();
-    const deltaTime = userSelectedDate - currentTime;
+function startCountdown() {
+  countdownInterval = setInterval(() => {
+    const now = new Date();
+    const timeDifference = userSelectedDate - now;
 
-    if (deltaTime <= 0) {
-      clearInterval(interval);
-      startBtn.classList.add('false');
-      dateTimePicker.disabled = false;
+    if (timeDifference <= 0) {
+      clearInterval(countdownInterval);
+      updateTimerDisplay(0, 0, 0, 0);
+      refs.dateTimePicker.disabled = false;
       return;
     }
 
-    updateTimer(convertMs(deltaTime));
+    const { days, hours, minutes, seconds } = convertMs(timeDifference);
+    updateTimerDisplay(days, hours, minutes, seconds);
   }, 1000);
 }
 
-function updateTimer({ days, hours, minutes, seconds }) {
-  daysValue.textContent = addZero(days);
-  hoursValue.textContent = addZero(hours);
-  minsValue.textContent = addZero(minutes);
-  secsValue.textContent = addZero(seconds);
+function updateTimerDisplay(days, hours, minutes, seconds) {
+  refs.days.textContent = addLeadingZero(days);
+  refs.hours.textContent = addLeadingZero(hours);
+  refs.minutes.textContent = addLeadingZero(minutes);
+  refs.seconds.textContent = addLeadingZero(seconds);
+}
+
+function addLeadingZero(value) {
+  return String(value).padStart(2, '0');
 }
 
 function convertMs(ms) {
-  // Number of milliseconds per unit of time
   const second = 1000;
   const minute = second * 60;
   const hour = minute * 60;
   const day = hour * 24;
 
-  // Remaining days
   const days = Math.floor(ms / day);
-  // Remaining hours
   const hours = Math.floor((ms % day) / hour);
-  // Remaining minutes
   const minutes = Math.floor(((ms % day) % hour) / minute);
-  // Remaining seconds
   const seconds = Math.floor((((ms % day) % hour) % minute) / second);
 
   return { days, hours, minutes, seconds };
-}
-
-function addZero(value) {
-  return String(value).padStart(2, '0');
 }
